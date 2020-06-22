@@ -86,10 +86,10 @@
                             <lightning-formatted-text value="Select Template"></lightning-formatted-text>
                             <br/>
                             <select class="slds-select" onchange={onHTMLChange} id="InputHTMLTemplate">
-                            <template for:each={selHTML} for:item="htmlVal"> 
-                                <option value={htmlVal} key={htmlVal}><lightning-formatted-text value={htmlVal}></lightning-formatted-text></option>
-                            </template>
-                        </select>
+                                <template for:each={templateList} for:item="htmlVal"> 
+                                    <option value={htmlVal.Id} key={htmlVal.Subject}><lightning-formatted-text value={htmlVal.Subject}></lightning-formatted-text></option>
+                                </template>
+                            </select>
                             <br/>
                             <lightning-button label="Insert Template" onclick={insertHTML}
                                               variant="brand" icon-name='utility:email'></lightning-button>
@@ -201,10 +201,10 @@
                                 <lightning-formatted-text value="Select Template"></lightning-formatted-text>
                                 <br/>
                                 <select class="slds-select" onchange={onHTMLChange} id="InputHTMLTemplate2">
-                                <template for:each={selHTML} for:item="htmlVal"> 
-                                    <option value={htmlVal} key={htmlVal}><lightning-formatted-text value={htmlVal}></lightning-formatted-text></option>
-                                </template>
-                            </select>
+                                    <template for:each={templateList} for:item="htmlVal"> 
+                                        <option value={htmlVal.Id} key={htmlVal.Subject}><lightning-formatted-text value={htmlVal.Subject}></lightning-formatted-text></option>
+                                    </template>
+                                </select>
                                 <br/>
                                 <lightning-button label="Insert Template" onclick={insertHTML}
                                                   variant="brand" icon-name='utility:email'></lightning-button>

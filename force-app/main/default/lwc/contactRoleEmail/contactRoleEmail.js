@@ -1,6 +1,7 @@
 import { LightningElement, api } from 'lwc';
 
 import getContentFiles from '@salesforce/apex/AA_ContactRoleEmailService.getContentFiles';
+import getEmailTemplates from '@salesforce/apex/AA_ContactRoleEmailService.getEmailTemplates';
 import getContactList from '@salesforce/apex/AA_ContactRoleEmailService.getContactList';
 import getRecord from '@salesforce/apex/AA_ContactRoleEmailService.getRecord';
 import sendEmail from '@salesforce/apex/AA_ContactRoleEmailService.sendEmail';
@@ -22,6 +23,7 @@ export default class ContactRoleEmail extends LightningElement {
 @api isMobile = false;
 @api sendButtonDisabled = false;
 @api conList = [];
+@api templateList = [];
 @api selectedEmails = [];
 
     connectedCallback(){
@@ -65,6 +67,17 @@ export default class ContactRoleEmail extends LightningElement {
                                                             }
                                                             }
                                                             this.conList = tempList;
+                                                            getEmailTemplates()
+                                                                .then(
+                                                                    result=>{
+                                                                        this.templateList = result;
+                                                                        }
+                                                                    )
+                                                                .catch(
+                                                                    error=>{
+                                                                        console.log('Error fetching template list: ' + error.message);
+                                                                        }
+                                                                    );
                                                         }
                                                     )
                                                 .catch(

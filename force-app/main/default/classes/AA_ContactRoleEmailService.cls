@@ -9,7 +9,15 @@ public with sharing class AA_ContactRoleEmailService {
 			}
 		system.debug('fileList: ' + fileList);
 		return fileList;
-		}
+        }
+        
+    @AuraEnabled
+    public static list<EmailTemplate> getEmailTemplates(){
+        list<EmailTemplate> templateList = new list<EmailTemplate>();
+        templateList = [SELECT Id, Body, Subject FROM EmailTemplate];
+        system.debug('templateList: ' + templateList);
+        return templateList;
+        }
 
 	@AuraEnabled
 	public static sObject getRecord(string id){
