@@ -209,7 +209,7 @@ export default class ContactRoleEmail extends LightningElement {
         
         insertHTML(){
             insertHTML({
-                        'selectedTemplate' : this.selectedTemplate
+                        'templateId' : this.selectedTemplate
                         }
                         )
                     .then(
