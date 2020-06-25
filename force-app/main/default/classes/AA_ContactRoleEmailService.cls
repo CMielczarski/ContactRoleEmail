@@ -14,7 +14,7 @@ public with sharing class AA_ContactRoleEmailService {
     @AuraEnabled
     public static list<EmailTemplate> getEmailTemplates(){
         list<EmailTemplate> templateList = new list<EmailTemplate>();
-        templateList = [SELECT Id, Body, Subject FROM EmailTemplate];
+        templateList = [SELECT Id, Body, Subject, Name FROM EmailTemplate];
         system.debug('templateList: ' + templateList);
         return templateList;
         }
@@ -59,9 +59,10 @@ public with sharing class AA_ContactRoleEmailService {
         }
 
 	@AuraEnabled
-	public static string sendEmail(ID parentID, list<string> sendToEmailIDs, string subject, string body, list<string> files, list<string> libraryFiles){
+	public static string sendEmail(ID parentID, list<string> sendToEmailIDs, string subject, string body, list<string> files, list<string> libraryFiles, string templateID){
 		string result;
 		ID orgID = UserInfo.getOrganizationId();
+		system.debug('Template ID present?: ' + templateID);
 		//string replyEmail;
 		//Production
 		if(orgID == '00D30000000Ygz3'){
@@ -97,10 +98,19 @@ public with sharing class AA_ContactRoleEmailService {
 				    toAddress.addAll(listSplit);
 				    }
 			    // Sets the paramaters of the email
-			    email.setSubject(subject);
 			    email.setToAddresses(toAddress);
-			    email.setHtmlBody(body);
-			
+				email.setTargetObjectId(i);
+				if(string.IsBlank(templateID)){
+					system.debug('No Template');
+					email.setHtmlBody(body);
+					email.setUseSignature(true);
+					email.setSubject(subject);
+					}
+				else{
+					system.debug('Using Template');
+					email.setTemplateId(templateID);
+					}
+					email.setWhatId(parentID);
 			    list<Messaging.Emailfileattachment> efaList = new list<Messaging.Emailfileattachment>();
 			    system.debug('cleanFiles: ' + cleanFiles);
 			    if(cleanFiles.size() > 0){
@@ -142,10 +152,9 @@ public with sharing class AA_ContactRoleEmailService {
 			 		    }
 				    }
 			    email.setFileAttachments(efaList);
-			    email.setTargetObjectId(i);
-			    email.setSaveAsActivity(true);
-			    email.setUseSignature(true);
-                messages.add(email);
+				email.setSaveAsActivity(true);
+				system.debug('Message: ' + email);
+			    messages.add(email);
                 }
             }
         try{
@@ -163,9 +172,9 @@ public with sharing class AA_ContactRoleEmailService {
 	public static list<string> insertHTML(string templateId){
 		list<string> template = new list<string>();
 
-		EmailTemplate et = [SELECT Id, Body, Subject FROM EmailTemplate WHERE ID =: templateID LIMIT 1];
+		EmailTemplate et = [SELECT Id, Body, Subject, HtmlValue FROM EmailTemplate WHERE ID =: templateID LIMIT 1];
 		template.add(et.Subject);
-		template.add(et.Body);
+		template.add(et.HtmlValue);
 
 		return template;   
 		}

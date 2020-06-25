@@ -87,7 +87,7 @@
                             <br/>
                             <select class="slds-select" onchange={onHTMLChange} id="InputHTMLTemplate">
                                 <template for:each={templateList} for:item="htmlVal"> 
-                                    <option value={htmlVal.Id} key={htmlVal.Subject}><lightning-formatted-text value={htmlVal.Subject}></lightning-formatted-text></option>
+                                    <option value={htmlVal.Id} key={htmlVal.Name}><lightning-formatted-text value={htmlVal.Name}></lightning-formatted-text></option>
                                 </template>
                             </select>
                             <br/>
@@ -159,7 +159,7 @@
                             <tr>
                                 <td colspan="2">
                                     <lightning-formatted-text value="Message: "></lightning-formatted-text>
-                                    <lightning-input-rich-text value={body} onchange={handleInputChange} name="body"></lightning-input-rich-text>
+                                    <lightning-input-rich-text style="height:400px" value={body} onchange={handleInputChange} name="body"></lightning-input-rich-text>
                                 </td>
                             </tr>
                         </table>
@@ -202,7 +202,7 @@
                                 <br/>
                                 <select class="slds-select" onchange={onHTMLChange} id="InputHTMLTemplate2">
                                     <template for:each={templateList} for:item="htmlVal"> 
-                                        <option value={htmlVal.Id} key={htmlVal.Subject}><lightning-formatted-text value={htmlVal.Subject}></lightning-formatted-text></option>
+                                        <option value={htmlVal.Id} key={htmlVal.Name}><lightning-formatted-text value={htmlVal.Name}></lightning-formatted-text></option>
                                     </template>
                                 </select>
                                 <br/>

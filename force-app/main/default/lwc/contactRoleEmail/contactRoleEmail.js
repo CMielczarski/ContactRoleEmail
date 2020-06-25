@@ -14,7 +14,7 @@ export default class ContactRoleEmail extends LightningElement {
 @api body;
 @api contentFileList = [];
 @api selectedFiles = [];
-@api selectedTemplate = [];
+@api selectedTemplate = '';
 @api accept = "['.jpg', '.jpeg' , '.doc', '.docx', '.pdf', '.msg', '.txt', '.html', '.htm', '.png', '.csv', '.xlsx', '.xlsm', '.xltx', '.xltm', '.ppsx', '.ppt', '.pptm', '.pptx']";
 @api selectedAttachments = [];
 @api Spinner = false;
@@ -144,28 +144,29 @@ export default class ContactRoleEmail extends LightningElement {
             this.activeClass = 'slds-modal slds-fade-in-open slds-modal_large';
             this.activeClass2 = 'slds-backdrop--open';
             this.showForm = true;
+            console.log('Has recordID?: ' + this.recordId);
             getContactList({
-                "id" : this.recordId
-                }
-                )
-                .then(
-                    result=>{
-                        var stockData = result;
-                        var tempList = [];
-                        if(stockData !== null){
-                            for(var i = 0; i < stockData.length; i++){
-                                var strng = stockData[i].FirstName + ' ' + stockData[i].LastName + ', ' + stockData[i].Title;
-                                tempList.push({value: stockData[i].Id, label: strng});
-                                }
-                            }
-                            this.conList = tempList;
+                            "id" : this.recordId
                             }
                     )
-                .catch(
-                    error=>{
-                        console.log('Error fetching contact list: ' + error.message);
-                        }
-                    );
+                    .then(
+                        result=>{
+                            var stockData = result;
+                            var tempList = [];
+                            if(stockData !== null){
+                                for(var i = 0; i < stockData.length; i++){
+                                    var strng = stockData[i].FirstName + ' ' + stockData[i].LastName + ', ' + stockData[i].Title;
+                                    tempList.push({value: stockData[i].Id, label: strng});
+                                    }
+                                }
+                                this.conList = tempList;
+                                }
+                        )
+                    .catch(
+                        error=>{
+                            console.log('Error fetching contact list: ' + error.message);
+                            }
+                        );
             }
         
         closeNewModal(){
@@ -183,6 +184,7 @@ export default class ContactRoleEmail extends LightningElement {
                         'files' : this.selectedAttachments,
                         'libraryFiles' : this.selectedFiles,
                         'body' : this.body,
+                        'templateID' : this.selectedTemplate
                         })
                         .then(
                             result=>{
@@ -216,8 +218,13 @@ export default class ContactRoleEmail extends LightningElement {
                         result=>{
                             console.log('Result from server-->>> ' + result);
                             var stockData = result;
+                            console.log('Result: ' + result);
+                            console.log('Result Subject: ' + stockData[0]);
+                            console.log('Result Body: ' + stockData[1]);
                             this.subject = stockData[0];
                             this.body = stockData[1];
+                            console.log('Subject: ' + this.subject);
+                            console.log('Body: ' + this.body);
                             }
                         )
                     .catch(
