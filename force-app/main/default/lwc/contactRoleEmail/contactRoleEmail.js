@@ -9,7 +9,7 @@ import insertHTML from '@salesforce/apex/AA_ContactRoleEmailService.insertHTML';
 import formFactor from '@salesforce/client/formFactor';
 
 export default class ContactRoleEmail extends LightningElement {
-
+@api flexipageRegionWidth;
 @api subject;
 @api body;
 @api contentFileList = [];
@@ -25,6 +25,7 @@ export default class ContactRoleEmail extends LightningElement {
 @api conList = [];
 @api templateList = [];
 @api selectedEmails = [];
+@api selectedNames = [];
 
     connectedCallback(){
         this.sendButtonDisabled = true;
@@ -242,6 +243,20 @@ export default class ContactRoleEmail extends LightningElement {
 
         onContactListChange(event){
             var selectedOptionsList = event.target.value;
+            var nameList = event.target.label;
+            var tempLst;
+            let mapSelected = new Map();
+            
+            for(var i = 0; i < selectedOptionsList.length; i++){
+                mapSelected.set(selectedOptionsList[i], nameList[i]);
+                }
+
+            for(const [key, value] of myMap.entries()){
+                console.log(key, value);
+                tempLst.push({value: key, label: value});
+                }
+                this.selectedNames = tempLst;
+            
             console.log('Contacts: ' + selectedOptionsList);
             this.selectedEmails = selectedOptionsList;
             if(this.selectedEmails.length > 0){
@@ -250,6 +265,11 @@ export default class ContactRoleEmail extends LightningElement {
             else{
                 this.sendButtonDisabled = true;
                 }
+            }
+
+        onIndvChange(event){
+            var selectedName = event.target.value;
+            /////////////////////////////////////////////////////////////
             }
         
         onHTMLChange(event){

@@ -5,13 +5,13 @@
                           icon-position="left"
                           variant="brand"
                           onclick={newPopup}
-                          ></lightning-button>
-        </template>
-        <template if:true={isMobile}>
-            <div class="slds-modal__header">
-                EMAIL
-            </div>
-                <table>
+                          >
+		</lightning-button>
+	</template>
+        
+		<template if:true={isMobile}>
+			<div class={flexipageRegionWidth}>
+				<table>
                     <tr>
                         <td>
                             <lightning-dual-listbox name="files"
@@ -19,7 +19,8 @@
                                     source-label="Available"
                                     selected-label="Selected"
                                     options={conList}
-                                    onchange={onContactListChange}></lightning-dual-listbox>
+                                    onchange={onContactListChange}>
+							</lightning-dual-listbox>
                             <br/>
                         </td>
                     </tr>
@@ -47,13 +48,13 @@
                     </tr>
                 </table>
                     <br/>
-                    <lightning-button label="Send" onclick={sendMail} variant="brand" icon-name='utility:email' disabled={sendButtonDisabled}></lightning-button>
+                <lightning-button label="Send" onclick={sendMail} variant="brand" icon-name='utility:email' disabled={sendButtonDisabled}></lightning-button>
                     <br/><br/>
                     <div>
                         <table>
                             <tr>
                                 <td>
-                                    <lightning-formatted-text value="Attach new file(s): "></lightning-formatted-text>
+                                    <lightning-formatted-text value="Attach new file(s) (Optional): "></lightning-formatted-text>
                                     <lightning-file-upload
                                             name="fileUploader"
                                             multiple
@@ -63,58 +64,52 @@
                                             ></lightning-file-upload>
                                 </td>
                             </tr>
-                            <template if:true={isSRS}>
                             <tr>
                                 <td>
-                                    <lightning-formatted-text value=""></lightning-formatted-text>
+                                    <br/><br/>
                                     <lightning-dual-listbox name="files"
                                         label= "Select Library file to attach (Optional): "
                                         source-label="Available"
                                         selected-label="Selected"
                                         options={contentFileList}
-                                        onchange={onLibraryChange}></lightning-dual-listbox>
+                                        onchange={onLibraryChange}>
+									</lightning-dual-listbox>
                                 </td>
                             </tr>
-                            </template>
                         </table>
                     </div>
                 
-            <div class="slds-modal__footer">
-                <table>
-                    <tr>
-                        <td colspan="2">
-                            <lightning-formatted-text value="Select Template"></lightning-formatted-text>
-                            <br/>
-                            <select class="slds-select" onchange={onHTMLChange} id="InputHTMLTemplate">
-                                <template for:each={templateList} for:item="htmlVal"> 
-                                    <option value={htmlVal.Id} key={htmlVal.Name}><lightning-formatted-text value={htmlVal.Name}></lightning-formatted-text></option>
-                                </template>
-                            </select>
-                            <br/>
-                            <lightning-button label="Insert Template" onclick={insertHTML}
-                                              variant="brand" icon-name='utility:email'></lightning-button>
-                                              <br/>
-                        </td>
-                    </tr>
-                    <tr style="text-align:right">
-                        <td colspan="2">
-                            <lightning-button label="Close" onclick={closeNewModal}
-                                                variant="brand"></lightning-button>
-                        </td>
-                    </tr>
-                </table>
-            </div>
-        </div>
-    </div>
-        </template>
+					<div>
+						<table>
+							<tr>
+								<td colspan="2">
+									<br/><br/>
+									<lightning-formatted-text value="Select Template"></lightning-formatted-text>
+									<br/>
+									<select class="slds-select" onchange={onHTMLChange} id="InputHTMLTemplate">
+										<template for:each={templateList} for:item="htmlVal"> 
+											<option value={htmlVal.Id} key={htmlVal.Name}><lightning-formatted-text value={htmlVal.Name}></lightning-formatted-text></option>
+										</template>
+									</select>
+									<br/>
+									<lightning-button label="Insert Template" onclick={insertHTML}
+													variant="brand" icon-name='utility:email'></lightning-button>
+													<br/>
+								</td>
+							</tr>
+						</table>
+					</div>
+			</div>
+		</template>
     
         <template if:false={isMobile}>
         <template if:true={showForm}>
+        <section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open slds-modal_medium" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1">
         <div role="dialog" tabindex="-1" aria-labelledby="header43" id="Modalbox1" class={activeClass}>
             <div class="slds-modal__container" >
                 <template if:true={Spinner}>
                     <div id="spinnerId" class="slds-spinner_container">
-                        <div class="slds-spinner--brand  slds-spinner slds-spinner--large slds-is-relative" role="alert">
+                        <div class="slds-spinner--brand  slds-spinner slds-spinner--medium slds-is-relative" role="alert">
                             <span class="slds-assistive-text">Loading</span>
                                 <div class="slds-spinner__dot-a"></div>
                                 <div class="slds-spinner__dot-b"></div>
@@ -125,79 +120,103 @@
                 <div class="slds-modal__header">
                     EMAIL
                 </div>
-                
-                <div id="mid" class="slds-modal__content slds-p-around--large">
-                    <div class = "slds-size--8-of-8">
-                        <table>
-                            <tr>
-                                <td colspan="2">
-                                    <lightning-dual-listbox name="files"
-                                                label= "Select Recipients:"
-                                                source-label="Available"
-                                                selected-label="Selected"
-                                                options={conList}
-                                                onchange={onContactListChange}></lightning-dual-listbox>
-                                    <br/>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <br/>
-                                    <br/>
-                                        <span style="color:red"><lightning-formatted-text value="*Please note, use either the spaces below to compose an email or select a template to automatically send a saved configuration.  Do not select values for both.*"></lightning-formatted-text></span>
-                                    <br/>
-                                    <br/>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td colspan="2">
-                                    <lightning-formatted-text value="Subject: "></lightning-formatted-text>
-                                    <lightning-input type="text" value={subject} onchange={handleInputChange} name="subject"></lightning-input>
-                                    <br/>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td colspan="2">
-                                    <lightning-formatted-text value="Message: "></lightning-formatted-text>
-                                    <lightning-input-rich-text style="height:400px" value={body} onchange={handleInputChange} name="body"></lightning-input-rich-text>
-                                </td>
-                            </tr>
-                        </table>
-                        <br/>
-                        <lightning-button label="Send" onclick={sendMail} variant="brand" icon-name='utility:email' disabled={sendButtonDisabled}></lightning-button>
-                        <br/><br/>
-                        <div>
+                <lightning-tabset>
+                    
+                    <lightning-tab label="Content">
+                    <div id="mid" class="slds-modal__content slds-p-around--medium">
+                        <div >
                             <table>
                                 <tr>
-                                    <td>
-                                        <lightning-formatted-text value="Attach new file(s): "></lightning-formatted-text>
-                                        <lightning-file-upload
-                                                name="fileUploader"
-                                                multiple
-                                                accept={accept}
-                                                record-id={recordId}
-                                                onuploadfinished={handleUploadFinished}
-                                                ></lightning-file-upload>
+                                    <td colspan="2">
+                                        <lightning-dual-listbox name="recipients"
+                                                    label= "Select Recipients:"
+                                                    source-label="Available"
+                                                    selected-label="Selected"
+                                                    options={conList}
+                                                    onchange={onContactListChange}></lightning-dual-listbox>
+                                        <br/>
                                     </td>
+                                </tr>
+                                <tr>
                                     <td>
-                                        <lightning-formatted-text value=""></lightning-formatted-text>
-                                        <lightning-dual-listbox name="files"
+                                        <br/>
+                                        <br/>
+                                            <span style="color:red"><lightning-formatted-text value="*Please note, use either the spaces below to compose an email or select a template to automatically send a saved configuration.  Do not select values for both.*"></lightning-formatted-text></span>
+                                        <br/>
+                                        <br/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2">
+                                        <lightning-formatted-text value="Subject: "></lightning-formatted-text>
+                                        <lightning-input type="text" value={subject} onchange={handleInputChange} name="subject"></lightning-input>
+                                        <br/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2">
+                                        <lightning-formatted-text value="Message: "></lightning-formatted-text>
+                                        <lightning-input-rich-text style="height:400px" value={body} onchange={handleInputChange} name="body"></lightning-input-rich-text>
+                                    </td>
+                                </tr>
+                            </table>
+                            <br/>
+                            <lightning-button label="Send" onclick={sendMail} variant="brand" icon-name='utility:email' disabled={sendButtonDisabled}></lightning-button>
+                            <br/><br/>
+                            <div>
+                                <table>
+                                    <tr>
+                                        <td colspan="2">
+                                            <br/>
+                                            <lightning-formatted-text value="Attach new file(s) (Optional): "></lightning-formatted-text>
+                                            <lightning-file-upload
+                                                    name="fileUploader"
+                                                    multiple
+                                                    accept={accept}
+                                                    record-id={recordId}
+                                                    onuploadfinished={handleUploadFinished}
+                                                    ></lightning-file-upload>
+                                        <br/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2">
+                                            <br/>
+                                            <lightning-dual-listbox name="files"
                                             label= "Select Library file to attach (Optional): "
                                             source-label="Available"
                                             selected-label="Selected"
                                             options={contentFileList}
                                             onchange={onLibraryChange}></lightning-dual-listbox>
-                                    </td>
-                                </tr>
-                            </table>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
                         </div>
                     </div>
-                </div>
+                    </lightning-tab>
+                    
+                    <lightning-tab label="Preview">
+                        <div>
+                            Message(s) Preview
+                        </div>
+                        <div>
+                            <lightning-formatted-text value="Selected Recipients"></lightning-formatted-text>
+                            <select class="slds-select" onchange={onIndvChange} id="InputPreview2"></select>
+                                <template for:each={selectedNames} for:item="indv"> 
+                                    <option value={indv.value} key={indv.label}><lightning-formatted-text value={indv.label}></lightning-formatted-text></option>
+                                </template>
+                            </select>
+                        </div>
+                    </lightning-tab>
+
+                </lightning-tabset>
                 
                 <div class="slds-modal__footer">
                     <table>
                         <tr>
                             <td colspan="2">
+                                <br/>
                                 <lightning-formatted-text value="Select Template"></lightning-formatted-text>
                                 <br/>
                                 <select class="slds-select" onchange={onHTMLChange} id="InputHTMLTemplate2">
@@ -213,6 +232,7 @@
                         </tr>
                         <tr style="text-align:right">
                             <td colspan="2">
+                                <br/><br/>
                                 <lightning-button label="Close" onclick={closeNewModal}
                                                     variant="brand"></lightning-button>
                             </td>
@@ -221,6 +241,7 @@
                 </div>
             </div>
         </div>
+        </section>
         </template>
         </template>
 </template>

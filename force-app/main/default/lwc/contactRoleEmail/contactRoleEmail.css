@@ -7,3 +7,7 @@
     background-color: OliveDrab;
     color: white
 }
+
+.slds-modal__container {
+    width:50%;
+}
