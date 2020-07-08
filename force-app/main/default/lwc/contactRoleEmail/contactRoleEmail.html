@@ -10,11 +10,11 @@
 	</template>
         
 		<template if:true={isMobile}>
-            <template if:true={showMobile}>
             <lightning-tabset active-tab-value="one">
                                   
                 <lightning-tab label="Content" value="one">
-				<table>
+                <div style="width: 240px">
+                <table>
                     <tr>
                         <td>
                             <lightning-dual-listbox name="files"
@@ -101,7 +101,8 @@
 								</td>
 							</tr>
 						</table>
-					</div>
+                    </div>
+                </div>
             </lightning-tab>
 
             <template if:false={disablePreview}>
@@ -109,14 +110,14 @@
                     <div>
                         Message(s) Preview
                     </div>
-                    <div>
-                        <lightning-formatted-text value="Selected Recipients"></lightning-formatted-text>
+                    <!--<div>
+                        <lightning-formatted-text value="Selected Recipients" style="font-weight:bold"></lightning-formatted-text>
                         <select class="slds-select" onchange={onIndvChange} id="InputPreviewMobile">
                             <template for:each={selectedNames} for:item="indv"> 
                                 <option value={indv.value} key={indv.label}><lightning-formatted-text value={indv.label}></lightning-formatted-text></option>
                             </template>
                         </select>
-                    </div>
+                    </div>-->
                     <div>
                         <lightning-card  title="Rendered Preview">
                             <div>
@@ -128,7 +129,6 @@
               </template>
             </lightning-tabset>
         </template>
-        </template>
         
         <template if:true={Spinner}>
             <div id="spinnerId" class="slds-spinner_container">
@@ -139,7 +139,7 @@
                 </div>
             </div>
         </template>
-        
+
         <template if:false={isMobile}>
         <template if:true={showForm}>
             <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
@@ -227,14 +227,14 @@
                                       <div>
                                           Message(s) Preview
                                       </div>
-                                      <div>
-                                          <lightning-formatted-text value="Selected Recipients"></lightning-formatted-text>
+                                      <!--<div>
+                                          <lightning-formatted-text value="Selected Recipients" style="font-weight:bold"></lightning-formatted-text>
                                           <select class="slds-select" onchange={onIndvChange} id="InputPreview2">
                                               <template for:each={selectedNames} for:item="indv"> 
                                                   <option value={indv.value} key={indv.label}><lightning-formatted-text value={indv.label}></lightning-formatted-text></option>
                                               </template>
                                           </select>
-                                      </div>
+                                      </div>-->
                                       <div>
                                           <lightning-card  title="Rendered Preview">
                                               <div>

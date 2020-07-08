@@ -32,7 +32,6 @@ export default class ContactRoleEmail extends LightningElement {
 @api showPreview = false;
 @api bodyPreview;
 @api disablePreview = false;
-@api showMobile = false;
 
     connectedCallback(){
         this.disablePreview = true;
@@ -81,9 +80,6 @@ export default class ContactRoleEmail extends LightningElement {
                                                                     result=>{
                                                                         this.templateList = result;
                                                                         this.templateList.splice(0, 0, {value: undefined, label: 'None'});
-                                                                        if(this.isMobile === true){
-                                                                            this.showMobile = true;
-                                                                            }
                                                                         }
                                                                     )
                                                                 .catch(
@@ -241,6 +237,7 @@ export default class ContactRoleEmail extends LightningElement {
                         );
                 if(this.selectedEmails.length > 0){
                     this.disablePreview = false;
+                    this.previewEmails();
                     }
             }
         
@@ -252,15 +249,15 @@ export default class ContactRoleEmail extends LightningElement {
 
         onContactListChange(event){
             var selectedOptionsList = [];
-            this._selected = event.detail.value;
+            //this._selected = event.detail.value;
             selectedOptionsList = event.target.value;
-            let nameList = this._selected.map(option => this.conList.find(o => o.value === option).label);
+            //let nameList = this._selected.map(option => this.conList.find(o => o.value === option).label);
 
-            var tempLst = [];
+            //var tempLst = [];
 
-            let mapSelected = new Map();
+            //let mapSelected = new Map();
             
-            for(var i = 0; i < selectedOptionsList.length; i++){
+            /*for(var i = 0; i < selectedOptionsList.length; i++){
                 mapSelected.set(selectedOptionsList[i], nameList[i]);
                 }
                 tempLst.push({value: "None", label: "None"});
@@ -269,13 +266,14 @@ export default class ContactRoleEmail extends LightningElement {
                 tempLst.push({value: key, label: value});
                 }
                 this.selectedNames = tempLst;
-            
+            */
             console.log('Contacts: ' + selectedOptionsList);
             this.selectedEmails = selectedOptionsList;
             if(this.selectedEmails.length > 0){
                 this.sendButtonDisabled = false;
                 if(this.selectedTemplate !== undefined && this.selectedTemplate.length > 3){
                     this.disablePreview = false;
+                    this.previewEmails();
                     }
                 }
             else{
@@ -284,13 +282,32 @@ export default class ContactRoleEmail extends LightningElement {
 
             }
 
-        onIndvChange(event){
+        previewEmails(){
+            getBodyPreview({UserIds : this.selectedEmails, TemplateId : this.selectedTemplate})
+                    .then(
+                        result=>{
+                            var tempStrng = result;
+                            var parseLst = '';
+                            for(var i = 0; i < tempStrng.length; i++){
+                                parseLst += tempStrng[i] + "<br><br><br><br><br>";
+                                }
+                            this.bodyPreview = parseLst;
+                            }
+                    )
+                    .catch(
+                        error=>{
+                            console.log("Template Get Error: " + error.message);
+                            }
+                    );
+            }
+
+        /*onIndvChange(event){
             this.bodyPreview = '';
             var selectedUserName = event.target.value;
             if(selectedUserName !== 'None' && selectedUserName !== undefined){
                 console.log('Preview for: ' + selectedUserName);
                 var selectedUserID = event.target.value;
-                getBodyPreview({UserId : selectedUserID, TemplateId : this.selectedTemplate})
+                getBodyPreview({UserIds : this.selectedEmails, TemplateId : this.selectedTemplate})
                     .then(
                         result=>{
                             this.bodyPreview = result;
@@ -302,7 +319,7 @@ export default class ContactRoleEmail extends LightningElement {
                             }
                     );
                 }
-            }
+            }*/
         
         onHTMLChange(event){
             var selectedOptionsList = event.target.value;
