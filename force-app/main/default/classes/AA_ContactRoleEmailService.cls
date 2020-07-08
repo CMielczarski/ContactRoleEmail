@@ -176,8 +176,26 @@ public with sharing class AA_ContactRoleEmailService {
 		template.add(et.Subject);
 		template.add(et.HtmlValue);
 
-		return template;   
+		return template;
 		}
-		
 	
+	@AuraEnabled
+	public static String getBodyPreview(ID UserId, ID TemplateId){
+		string html;
+		Messaging.reserveSingleEmailCapacity(1);
+		Messaging.SingleEmailMessage email = new Messaging.SingleEmailMessage();
+		String[] toAddresses = new String[]{'invalid@emailaddr.es'};
+		email.setToAddresses(toAddresses);
+		email.setUseSignature(false);
+		email.setSaveAsActivity(false);
+		email.setSenderDisplayName('MMPT');
+		email.setTargetObjectId(UserId);
+		email.setTemplateId(TemplateId);
+		Savepoint sp = Database.setSavepoint();
+		Messaging.sendEmail(new Messaging.SingleEmailMessage[] {email});
+		Database.rollback(sp);
+		html = email.getHTMLBody();
+		return html;
+		}
+
 }

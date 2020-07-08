@@ -6,12 +6,15 @@ import getContactList from '@salesforce/apex/AA_ContactRoleEmailService.getConta
 import getRecord from '@salesforce/apex/AA_ContactRoleEmailService.getRecord';
 import sendEmail from '@salesforce/apex/AA_ContactRoleEmailService.sendEmail';
 import insertHTML from '@salesforce/apex/AA_ContactRoleEmailService.insertHTML';
+import getBodyPreview from '@salesforce/apex/AA_ContactRoleEmailService.getBodyPreview';
 import formFactor from '@salesforce/client/formFactor';
 
 export default class ContactRoleEmail extends LightningElement {
-@api flexipageRegionWidth;
 @api subject;
 @api body;
+@api baseURL;
+@api contentURL;
+@api fullURL;
 @api contentFileList = [];
 @api selectedFiles = [];
 @api selectedTemplate = '';
@@ -26,8 +29,13 @@ export default class ContactRoleEmail extends LightningElement {
 @api templateList = [];
 @api selectedEmails = [];
 @api selectedNames = [];
+@api showPreview = false;
+@api bodyPreview;
+@api disablePreview = false;
+@api showMobile = false;
 
     connectedCallback(){
+        this.disablePreview = true;
         this.sendButtonDisabled = true;
         console.log('Experience: ' + formFactor);
         if(formFactor !== 'Large'){
@@ -72,6 +80,10 @@ export default class ContactRoleEmail extends LightningElement {
                                                                 .then(
                                                                     result=>{
                                                                         this.templateList = result;
+                                                                        this.templateList.splice(0, 0, {value: undefined, label: 'None'});
+                                                                        if(this.isMobile === true){
+                                                                            this.showMobile = true;
+                                                                            }
                                                                         }
                                                                     )
                                                                 .catch(
@@ -217,15 +229,9 @@ export default class ContactRoleEmail extends LightningElement {
                         )
                     .then(
                         result=>{
-                            console.log('Result from server-->>> ' + result);
                             var stockData = result;
-                            console.log('Result: ' + result);
-                            console.log('Result Subject: ' + stockData[0]);
-                            console.log('Result Body: ' + stockData[1]);
                             this.subject = stockData[0];
                             this.body = stockData[1];
-                            console.log('Subject: ' + this.subject);
-                            console.log('Body: ' + this.body);
                             }
                         )
                     .catch(
@@ -233,6 +239,9 @@ export default class ContactRoleEmail extends LightningElement {
                             console.log("Template Get Error: " + error.message);
                             }
                         );
+                if(this.selectedEmails.length > 0){
+                    this.disablePreview = false;
+                    }
             }
         
         onLibraryChange(event){
@@ -242,17 +251,21 @@ export default class ContactRoleEmail extends LightningElement {
             }
 
         onContactListChange(event){
-            var selectedOptionsList = event.target.value;
-            var nameList = event.target.label;
-            var tempLst;
+            var selectedOptionsList = [];
+            this._selected = event.detail.value;
+            selectedOptionsList = event.target.value;
+            let nameList = this._selected.map(option => this.conList.find(o => o.value === option).label);
+
+            var tempLst = [];
+
             let mapSelected = new Map();
             
             for(var i = 0; i < selectedOptionsList.length; i++){
                 mapSelected.set(selectedOptionsList[i], nameList[i]);
                 }
-
-            for(const [key, value] of myMap.entries()){
-                console.log(key, value);
+                tempLst.push({value: "None", label: "None"});
+            for(const [key, value] of mapSelected.entries()){
+                console.log('Key: '+ key + ' Value: ' + value);
                 tempLst.push({value: key, label: value});
                 }
                 this.selectedNames = tempLst;
@@ -261,15 +274,34 @@ export default class ContactRoleEmail extends LightningElement {
             this.selectedEmails = selectedOptionsList;
             if(this.selectedEmails.length > 0){
                 this.sendButtonDisabled = false;
+                if(this.selectedTemplate !== undefined && this.selectedTemplate.length > 3){
+                    this.disablePreview = false;
+                    }
                 }
             else{
                 this.sendButtonDisabled = true;
                 }
+
             }
 
         onIndvChange(event){
-            var selectedName = event.target.value;
-            /////////////////////////////////////////////////////////////
+            this.bodyPreview = '';
+            var selectedUserName = event.target.value;
+            if(selectedUserName !== 'None' && selectedUserName !== undefined){
+                console.log('Preview for: ' + selectedUserName);
+                var selectedUserID = event.target.value;
+                getBodyPreview({UserId : selectedUserID, TemplateId : this.selectedTemplate})
+                    .then(
+                        result=>{
+                            this.bodyPreview = result;
+                            }
+                    )
+                    .catch(
+                        error=>{
+                            console.log("Template Get Error: " + error.message);
+                            }
+                    );
+                }
             }
         
         onHTMLChange(event){

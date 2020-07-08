@@ -9,5 +9,8 @@
 }
 
 .slds-modal__container {
-    width:50%;
+    height : 95vh !important; 
+    max-height: 95vh !important;
+    width : 95vh !important; 
+    max-width: 95vh !important;
 }
